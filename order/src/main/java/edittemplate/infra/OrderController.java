@@ -1,23 +1,52 @@
 package edittemplate.infra;
 
 import edittemplate.domain.*;
+import edittemplate.service.*;
+import java.util.List;
 import java.util.Optional;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//<<< Clean Arch / Inbound Adaptor
-
 @RestController
 // @RequestMapping(value="/orders")
-@Transactional
 public class OrderController {
 
-    @Autowired
-    OrderRepository orderRepository;
+    @Resource(name = "orderService")
+    private OrderService orderService;
+
+    @GetMapping("/orders")
+    public List<Order> getAllOrders() throws Exception {
+        // Get all orders via OrderService
+        return orderService.getAllOrders();
+    }
+
+    @GetMapping("/orders/{id}")
+    public Optional<Order> getOrderById(@PathVariable Long id)
+        throws Exception {
+        // Get a order by ID via OrderService
+        return orderService.getOrderById(id);
+    }
+
+    @PostMapping("/orders")
+    public Order createOrder(@RequestBody Order order) throws Exception {
+        // Create a new order via OrderService
+        return orderService.createOrder(order);
+    }
+
+    @PutMapping("/orders/{id}")
+    public Order updateOrder(@PathVariable Long id, @RequestBody Order order)
+        throws Exception {
+        // Update an existing order via OrderService
+        return orderService.updateOrder(order);
+    }
+
+    @DeleteMapping("/orders/{id}")
+    public void deleteOrder(@PathVariable Long id) throws Exception {
+        // Delete a order via OrderService
+        orderService.deleteOrder(id);
+    }
 }
-//>>> Clean Arch / Inbound Adaptor
